@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { motion, useAnimation } from 'framer-motion'
@@ -13,11 +13,32 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-import { CheckCircle, Star, ArrowRight } from 'lucide-react'
-// import AnimatedBackground from '@/components/AnimatedBackground'
+import { CheckCircle, Star, ArrowRight, CheckCircle2 } from 'lucide-react'
+
+const pricingPlans = [
+  {
+    name: 'Basic',
+    price: 9.99,
+    features: ['1 Personal Statement Review', 'Basic Feedback', '24-hour Turnaround'],
+    stripePriceId: 'price_basic123'
+  },
+  {
+    name: 'Pro',
+    price: 19.99,
+    features: ['3 Personal Statement Reviews', 'Detailed Feedback', '12-hour Turnaround', 'Video Call Consultation'],
+    stripePriceId: 'price_pro456'
+  },
+  {
+    name: 'Premium',
+    price: 39.99,
+    features: ['Unlimited Personal Statement Reviews', 'Expert Feedback', '6-hour Turnaround', 'Priority Support', 'Interview Preparation Guide'],
+    stripePriceId: 'price_premium789'
+  }
+]
 
 const FadeInWhenVisible: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const controls = useAnimation()
+  const [isLoading, setIsLoading] = useState<string | null>(null)
   const [ref, inView] = useInView()
 
   useEffect(() => {
@@ -44,34 +65,34 @@ const FadeInWhenVisible: React.FC<{ children: React.ReactNode }> = ({ children }
 
 export default function HomePage() {
   return (
-    <div className="relative flex flex-col min-h-screen overflow-hidden">
+    <div className="relative flex flex-col min-h-screen overflow-hidden bg-background">
       <div className="absolute inset-0 z-0">
-       {/* <AnimatedBackground /> */}
+        {/* <AnimatedBackground /> */}
       </div>
       <div className="relative z-10">
         {/* Hero Section */}
         <section className="py-20">
           <div className="container mx-auto px-4">
-            <motion.div 
+            <motion.div
               className="flex flex-col md:flex-row items-center justify-between"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
               <div className="md:w-1/2 mb-10 md:mb-0">
-                <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">Elevate Your Personal Statement</h1>
-                <p className="text-xl mb-6 text-white">Get expert feedback, plagiarism checks, and AI detection to make your application stand out.</p>
-                <Button className="bg-white text-primary hover:bg-gray-100">
+                <h1 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">Elevate Your Personal Statement</h1>
+                <p className="text-xl mb-6 text-foreground">Get expert feedback, plagiarism checks, and AI detection to make your application stand out.</p>
+                <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
                   Start Your Review
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </div>
               <div className="md:w-1/2">
                 <Image
-                  src="/placeholder.svg"
+                  src="/header.png"
                   alt="Personal Statement Review Process"
-                  width={400}
-                  height={300}
+                  width={1400}
+                  height={1000}
                   className="rounded-lg shadow-lg"
                 />
               </div>
@@ -80,9 +101,9 @@ export default function HomePage() {
         </section>
 
         {/* Key Benefits Section */}
-        <section className="py-20 bg-white bg-opacity-90">
+        <section className="py-20 bg-background">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-12">Why Choose Our Service?</h2>
+            <h2 className="text-3xl font-bold text-center mb-12 text-foreground">Why Choose Our Service?</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {[
                 { title: "Expert Feedback", description: "Receive detailed, constructive feedback from experienced reviewers." },
@@ -105,9 +126,9 @@ export default function HomePage() {
         </section>
 
         {/* How It Works Section */}
-        <section className="py-20 bg-gray-50 bg-opacity-90">
+        <section className="py-20 bg-secondary">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-12">How It Works</h2>
+            <h2 className="text-3xl font-bold text-center mb-12 text-secondary-foreground">How It Works</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {[
                 { step: 1, title: "Submit Your Statement", description: "Upload your personal statement to our secure platform." },
@@ -116,15 +137,15 @@ export default function HomePage() {
               ].map((step, index) => (
                 <FadeInWhenVisible key={index}>
                   <div className="flex flex-col items-center text-center">
-                    <motion.div 
-                      className="w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center text-2xl font-bold mb-4"
+                    <motion.div
+                      className="w-16 h-16 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-2xl font-bold mb-4"
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
                     >
                       {step.step}
                     </motion.div>
-                    <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
-                    <p>{step.description}</p>
+                    <h3 className="text-xl font-semibold mb-2 text-secondary-foreground">{step.title}</h3>
+                    <p className="text-secondary-foreground">{step.description}</p>
                   </div>
                 </FadeInWhenVisible>
               ))}
@@ -133,9 +154,9 @@ export default function HomePage() {
         </section>
 
         {/* Testimonials Section */}
-        <section className="py-20 bg-white bg-opacity-90">
+        <section className="py-20 bg-background">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-12">What Our Users Say</h2>
+            <h2 className="text-3xl font-bold text-center mb-12 text-foreground">What Our Users Say</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {[
                 { name: "Alex Johnson", role: "Graduate Student", quote: "The feedback I received was invaluable. It helped me refine my statement and ultimately secure my dream program." },
@@ -166,40 +187,43 @@ export default function HomePage() {
         </section>
 
         {/* Pricing Section */}
-        <section className="py-20 bg-gray-50 bg-opacity-90">
+        <section className="py-20 bg-secondary">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-12">Simple, Transparent Pricing</h2>
-            <div className="flex justify-center">
-              <FadeInWhenVisible>
-                <Card className="w-full max-w-md">
-                  <CardHeader>
-                    <CardTitle className="text-2xl">Professional Review</CardTitle>
-                    <CardDescription>Everything you need for a standout personal statement</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-4xl font-bold mb-4">$49.99</div>
-                    <ul className="space-y-2">
-                      {["Expert feedback", "Plagiarism check", "AI detection", "48-hour turnaround"].map((feature, index) => (
-                        <li key={index} className="flex items-center">
-                          <CheckCircle className="h-5 w-5 text-green-500 mr-2" />
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                  <CardFooter>
-                    <Button className="w-full">Get Started</Button>
-                  </CardFooter>
-                </Card>
-              </FadeInWhenVisible>
+            <h2 className="text-3xl font-bold text-center mb-12 text-secondary-foreground">Choose Your Plan</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {pricingPlans.map((plan) => (
+                <FadeInWhenVisible key={plan.name}>
+                  <Card className="flex flex-col h-full bg-card">
+                    <CardHeader>
+                      <CardTitle className="text-2xl text-card-foreground">{plan.name}</CardTitle>
+                      <CardDescription className="text-3xl font-bold text-card-foreground">${plan.price.toFixed(2)}/month</CardDescription>
+                    </CardHeader>
+                    <CardContent className="flex-grow">
+                      <ul className="space-y-2">
+                        {plan.features.map((feature) => (
+                          <li key={feature} className="flex items-center text-card-foreground">
+                            <CheckCircle2 className="h-5 w-5 text-primary mr-2" />
+                            <span>{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </CardContent>
+                    <CardFooter>
+                      <Button className="w-full">
+                        Subscribe to {plan.name}
+                      </Button>
+                    </CardFooter>
+                  </Card>
+                </FadeInWhenVisible>
+              ))}
             </div>
           </div>
         </section>
 
         {/* FAQ Section */}
-        <section className="py-20 bg-white bg-opacity-90">
+        <section className="py-20 bg-background">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-12">Frequently Asked Questions</h2>
+            <h2 className="text-3xl font-bold text-center mb-12 text-foreground">Frequently Asked Questions</h2>
             <Accordion type="single" collapsible className="w-full max-w-2xl mx-auto">
               {[
                 { question: "How long does the review process take?", answer: "Our standard turnaround time is 48 hours. If you need it sooner, please contact us for rush options." },

@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { cn } from "@/lib/utils"
+import { ModeToggle } from "@/components/ui/toggle-dm" // Import the ModeToggle component
+import { useTheme } from 'next-themes' // Import useTheme from next-themes
 
 const navItems = [
   { name: 'Home', href: '/' },
@@ -10,20 +12,22 @@ const navItems = [
   { name: 'FAQ', href: '/faq' },
   { name: 'Pricing', href: '/pricing' },
   { name: 'Terms', href: '/terms' },
+  { name: 'Feedback', href: '/feedback' },
 ]
 
 export function Navbar() {
   const [activeItem, setActiveItem] = useState('Home')
+  const { theme } = useTheme() // Get the current theme
 
   return (
-    <nav className="bg-white shadow-sm">
+    <nav className={cn("shadow-sm", theme === 'dark' ? 'bg-gray-900' : 'bg-white')}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex">
-            <div className="flex-shrink-0 flex items-center">
-              <span className="text-2xl font-bold text-primary">PSReviewer</span>
-            </div>
-            <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
+        <div className="flex justify-between h-16 items-center">
+          <div className="flex-shrink-0 pl-4">
+            <span className={cn("text-2xl font-bold", theme === 'dark' ? 'text-white' : 'text-gray-900')}>PSReviewer</span>
+          </div>
+          <div className="flex-grow flex justify-center">
+            <div className="hidden sm:flex sm:space-x-8">
               {navItems.map((item) => (
                 <Link
                   key={item.name}
@@ -36,10 +40,13 @@ export function Navbar() {
                   )}
                   onClick={() => setActiveItem(item.name)}
                 >
-                  {item.name}
+                  <span className={cn(theme === 'dark' ? 'text-white' : 'text-gray-900')}>{item.name}</span>
                 </Link>
               ))}
             </div>
+          </div>
+          <div className="flex-shrink-0 w-48 flex justify-end pr-4">
+            <ModeToggle />
           </div>
         </div>
       </div>
