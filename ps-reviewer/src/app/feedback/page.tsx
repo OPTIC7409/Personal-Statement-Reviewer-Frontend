@@ -1,12 +1,14 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import { useRouter } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
-import { AlertCircle, AlertTriangle, ChevronDown, ChevronUp } from 'lucide-react'
+import { AlertCircle, AlertTriangle, ChevronDown, ChevronUp, ArrowLeft } from 'lucide-react'
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import Cookies from 'js-cookie'
 
 type FeedbackCategory = {
   rating: number
@@ -37,6 +39,7 @@ type CombinedResponse = {
 }
 
 export default function PersonalStatementFeedback() {
+  const router = useRouter()
   const [personalStatement, setPersonalStatement] = useState('')
   const [combinedResponse, setCombinedResponse] = useState<CombinedResponse | null>(null)
   const [isLoading, setIsLoading] = useState(false)
@@ -46,6 +49,13 @@ export default function PersonalStatementFeedback() {
   const [wordCount, setWordCount] = useState(0)
   const [highlightedSection, setHighlightedSection] = useState<string | null>(null)
   const textRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const sessionToken = Cookies.get('session_token')
+    if (!sessionToken) {
+      router.push('/login')
+    }
+  }, [router])
 
   useEffect(() => {
     setCharCount(personalStatement.length)
@@ -59,10 +69,16 @@ export default function PersonalStatementFeedback() {
     setError(null)
 
     try {
+      const token = Cookies.get('session_token')
+      if (!token) {
+        throw new Error('No session token found')
+      }
+
       const response = await fetch('http://localhost:3002/api/statements/feedback', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `${token}`
         },
         body: JSON.stringify({ text: personalStatement }),
       })
@@ -190,53 +206,66 @@ export default function PersonalStatementFeedback() {
   }
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6">Personal Statement Feedback</h1>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div>
-          <h2 className="text-xl font-semibold mb-4">Your Personal Statement</h2>
-          <div
-            ref={textRef}
-            className="min-h-[300px] p-4 border rounded-md mb-4 whitespace-pre-wrap"
-            contentEditable
-            onInput={(e) => setPersonalStatement(e.currentTarget.textContent || '')}
-            dangerouslySetInnerHTML={{
-              __html: highlightText(personalStatement, highlightedSection) as string
-            }}
-          />
-          <div className="flex justify-between text-sm text-gray-500 mb-4">
-            <span>Characters: {charCount}</span>
-            <span>Words: {wordCount}</span>
-          </div>
-          <Button
-            onClick={handleSubmit}
-            disabled={isLoading || !!combinedResponse}
-            className="w-full"
-          >
-            {isLoading ? 'Generating Feedback...' : combinedResponse ? 'Feedback Generated' : 'Get Feedback'}
-          </Button>
-        </div>
-        <div>
-          {error && (
-            <Alert variant="destructive" className="mb-4">
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Error</AlertTitle>
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          )}
-          {combinedResponse && (
-            <div>
-              <h2 className="text-xl font-semibold mb-4">Feedback Results</h2>
-              {renderAIDetectionResult()}
-              {renderFeedbackCategory('clarity', 'Clarity')}
-              {renderFeedbackCategory('structure', 'Structure')}
-              {renderFeedbackCategory('grammar_spelling', 'Grammar & Spelling')}
-              {renderFeedbackCategory('relevance', 'Relevance')}
-              {renderFeedbackCategory('engagement', 'Engagement')}
-              {renderFeedbackCategory('overall_impression', 'Overall Impression')}
+    <div className="container mx-auto px-4 py-8">
+      <Button
+        variant="ghost"
+        onClick={() => router.push('/dashboard')}
+        className="mb-4"
+      >
+        <ArrowLeft className="mr-2 h-4 w-4" />
+        Back to Dashboard
+      </Button>
+      <h1 className="text-3xl font-bold mb-6 text-center">Personal Statement Feedback</h1>
+      <div className="max-w-4xl mx-auto">
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle>Submit Your Personal Statement</CardTitle>
+            <CardDescription>
+              Enter your personal statement below to receive detailed feedback and AI detection analysis.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div
+              ref={textRef}
+              className="min-h-[300px] p-4 border rounded-md mb-4 whitespace-pre-wrap"
+              contentEditable
+              onInput={(e) => setPersonalStatement(e.currentTarget.textContent || '')}
+              dangerouslySetInnerHTML={{
+                __html: highlightText(personalStatement, highlightedSection) as string
+              }}
+            />
+            <div className="flex justify-between text-sm text-gray-500 mb-4">
+              <span>Characters: {charCount} (without spaces: {charCountNoSpaces})</span>
+              <span>Words: {wordCount}</span>
             </div>
-          )}
-        </div>
+            <Button
+              onClick={handleSubmit}
+              disabled={isLoading || personalStatement.length === 0}
+              className="w-full"
+            >
+              {isLoading ? 'Generating Feedback...' : 'Get Feedback'}
+            </Button>
+          </CardContent>
+        </Card>
+        {error && (
+          <Alert variant="destructive" className="mb-4">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+        {combinedResponse && (
+          <div>
+            <h2 className="text-2xl font-semibold mb-4">Feedback Results</h2>
+            {renderAIDetectionResult()}
+            {renderFeedbackCategory('clarity', 'Clarity')}
+            {renderFeedbackCategory('structure', 'Structure')}
+            {renderFeedbackCategory('grammar_spelling', 'Grammar & Spelling')}
+            {renderFeedbackCategory('relevance', 'Relevance')}
+            {renderFeedbackCategory('engagement', 'Engagement')}
+            {renderFeedbackCategory('overall_impression', 'Overall Impression')}
+          </div>
+        )}
       </div>
     </div>
   )
