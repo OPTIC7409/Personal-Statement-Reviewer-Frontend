@@ -106,7 +106,7 @@ export default function Dashboard() {
           const feedbacks = data.feedbacks.filter((f: Feedback) => f.statement_id === statement.id)
           return {
             statement,
-            feedbacks: feedbacks.map(feedback => ({
+            feedbacks: feedbacks.map((feedback: Feedback) => ({
               ...feedback,
               feedback_text: typeof feedback.feedback_text === 'string'
                 ? JSON.parse(feedback.feedback_text)

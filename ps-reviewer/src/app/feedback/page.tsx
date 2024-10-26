@@ -41,6 +41,7 @@ type CombinedResponse = {
 export default function PersonalStatementFeedback() {
   const router = useRouter()
   const [personalStatement, setPersonalStatement] = useState('')
+  const [statementPurpose, setStatementPurpose] = useState('')
   const [combinedResponse, setCombinedResponse] = useState<CombinedResponse | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -80,7 +81,10 @@ export default function PersonalStatementFeedback() {
           'Content-Type': 'application/json',
           'Authorization': `${token}`
         },
-        body: JSON.stringify({ text: personalStatement }),
+        body: JSON.stringify({
+          text: personalStatement,
+          purpose: statementPurpose
+        }),
       })
 
       if (!response.ok) {
@@ -225,6 +229,19 @@ export default function PersonalStatementFeedback() {
             </CardDescription>
           </CardHeader>
           <CardContent>
+            <div className="mb-4">
+              <label htmlFor="statementPurpose" className="block text-sm font-medium text-gray-700 mb-1">
+                University Course / Statement Purpose
+              </label>
+              <input
+                type="text"
+                id="statementPurpose"
+                className="w-full p-2 border rounded-md"
+                value={statementPurpose}
+                onChange={(e) => setStatementPurpose(e.target.value)}
+                placeholder="e.g., Computer Science at MIT, Medical School Application"
+              />
+            </div>
             <div
               ref={textRef}
               className="min-h-[300px] p-4 border rounded-md mb-4 whitespace-pre-wrap"
@@ -240,7 +257,7 @@ export default function PersonalStatementFeedback() {
             </div>
             <Button
               onClick={handleSubmit}
-              disabled={isLoading || personalStatement.length === 0}
+              disabled={isLoading || personalStatement.length === 0 || statementPurpose.length === 0}
               className="w-full"
             >
               {isLoading ? 'Generating Feedback...' : 'Get Feedback'}
