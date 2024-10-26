@@ -144,7 +144,7 @@ export default function PersonalStatementFeedback() {
         </CardHeader>
         <CardContent>
           {overall_ai_probability > 50 && (
-            <Alert variant="warning" className="mb-4">
+            <Alert variant="destructive" className="mb-4">
               <AlertTriangle className="h-4 w-4" />
               <AlertTitle>High AI Content Probability</AlertTitle>
               <AlertDescription>

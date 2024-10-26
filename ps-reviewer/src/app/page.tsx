@@ -80,9 +80,9 @@ export default function HomePage() {
               transition={{ duration: 0.5 }}
             >
               <div className="md:w-1/2 mb-10 md:mb-0">
-                <h1 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">Elevate Your Personal Statement</h1>
-                <p className="text-xl mb-6 text-foreground">Get expert feedback, plagiarism checks, and AI detection to make your application stand out.</p>
-                <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
+                <h1 className="text-4xl md:text-5xl font-bold mb-4 text-primary">Elevate Your Personal Statement</h1>
+                <p className="text-xl mb-6 text-primary">Get expert feedback, plagiarism checks, and AI detection to make your application stand out.</p>
+                <Button className="bg-fuchsia-600 text-white hover:bg-fuchsia-400">
                   Start Your Review
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
@@ -101,9 +101,9 @@ export default function HomePage() {
         </section>
 
         {/* Key Benefits Section */}
-        <section className="py-20 bg-background">
+        <section className="py-20 bg-background bg-opacity-90">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-12 text-foreground">Why Choose Our Service?</h2>
+            <h2 className="text-3xl font-bold text-center mb-12 text-primary">Why Choose Our Service?</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {[
                 { title: "Expert Feedback", description: "Receive detailed, constructive feedback from experienced reviewers." },
@@ -111,12 +111,12 @@ export default function HomePage() {
                 { title: "AI Detection", description: "Verify that your statement sounds authentically human-written." }
               ].map((benefit, index) => (
                 <FadeInWhenVisible key={index}>
-                  <Card>
+                  <Card className="bg-white">
                     <CardHeader>
-                      <CardTitle>{benefit.title}</CardTitle>
+                      <CardTitle className="text-black">{benefit.title}</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p>{benefit.description}</p>
+                      <p className="text-black">{benefit.description}</p>
                     </CardContent>
                   </Card>
                 </FadeInWhenVisible>
@@ -126,9 +126,9 @@ export default function HomePage() {
         </section>
 
         {/* How It Works Section */}
-        <section className="py-20 bg-secondary">
+        <section className="py-20 bg-gray-50 bg-opacity-90">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-12 text-secondary-foreground">How It Works</h2>
+            <h2 className="text-3xl font-bold text-center mb-12 text-primary">How It Works</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {[
                 { step: 1, title: "Submit Your Statement", description: "Upload your personal statement to our secure platform." },
@@ -138,14 +138,14 @@ export default function HomePage() {
                 <FadeInWhenVisible key={index}>
                   <div className="flex flex-col items-center text-center">
                     <motion.div
-                      className="w-16 h-16 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-2xl font-bold mb-4"
+                      className="w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center text-2xl font-bold mb-4"
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
                     >
                       {step.step}
                     </motion.div>
-                    <h3 className="text-xl font-semibold mb-2 text-secondary-foreground">{step.title}</h3>
-                    <p className="text-secondary-foreground">{step.description}</p>
+                    <h3 className="text-xl font-semibold mb-2 text-primary">{step.title}</h3>
+                    <p className="text-primary">{step.description}</p>
                   </div>
                 </FadeInWhenVisible>
               ))}
@@ -154,9 +154,9 @@ export default function HomePage() {
         </section>
 
         {/* Testimonials Section */}
-        <section className="py-20 bg-background">
+        <section className="py-20 bg-background bg-opacity-90">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-12 text-foreground">What Our Users Say</h2>
+            <h2 className="text-3xl font-bold text-center mb-12 text-primary">What Our Users Say</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {[
                 { name: "Alex Johnson", role: "Graduate Student", quote: "The feedback I received was invaluable. It helped me refine my statement and ultimately secure my dream program." },
@@ -164,13 +164,13 @@ export default function HomePage() {
                 { name: "Michael Chen", role: "Law School Applicant", quote: "The AI detection feature is brilliant. It ensured my statement sounded authentic and personal." }
               ].map((testimonial, index) => (
                 <FadeInWhenVisible key={index}>
-                  <Card>
+                  <Card className="bg-white">
                     <CardHeader>
-                      <CardTitle>{testimonial.name}</CardTitle>
-                      <CardDescription>{testimonial.role}</CardDescription>
+                      <CardTitle className="text-black">{testimonial.name}</CardTitle>
+                      <CardDescription className="text-black">{testimonial.role}</CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <p>&quot;{testimonial.quote}&quot;</p>
+                      <p className="text-black">&quot;{testimonial.quote}&quot;</p>
                     </CardContent>
                     <CardFooter>
                       <div className="flex">
@@ -187,22 +187,22 @@ export default function HomePage() {
         </section>
 
         {/* Pricing Section */}
-        <section className="py-20 bg-secondary">
+        <section className="py-20 bg-gray-50 bg-opacity-90">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-12 text-secondary-foreground">Choose Your Plan</h2>
+            <h2 className="text-3xl font-bold text-center mb-12 text-primary">Choose Your Plan</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {pricingPlans.map((plan) => (
                 <FadeInWhenVisible key={plan.name}>
-                  <Card className="flex flex-col h-full bg-card">
+                  <Card className="flex flex-col h-full bg-white">
                     <CardHeader>
-                      <CardTitle className="text-2xl text-card-foreground">{plan.name}</CardTitle>
-                      <CardDescription className="text-3xl font-bold text-card-foreground">${plan.price.toFixed(2)}/month</CardDescription>
+                      <CardTitle className="text-2xl text-black">{plan.name}</CardTitle>
+                      <CardDescription className="text-3xl font-bold text-black">${plan.price.toFixed(2)}/month</CardDescription>
                     </CardHeader>
                     <CardContent className="flex-grow">
                       <ul className="space-y-2">
                         {plan.features.map((feature) => (
-                          <li key={feature} className="flex items-center text-card-foreground">
-                            <CheckCircle2 className="h-5 w-5 text-primary mr-2" />
+                          <li key={feature} className="flex items-center text-black">
+                            <CheckCircle2 className="h-5 w-5 text-green-500 mr-2" />
                             <span>{feature}</span>
                           </li>
                         ))}
@@ -221,9 +221,9 @@ export default function HomePage() {
         </section>
 
         {/* FAQ Section */}
-        <section className="py-20 bg-background">
+        <section className="py-20 bg-background bg-opacity-90">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-12 text-foreground">Frequently Asked Questions</h2>
+            <h2 className="text-3xl font-bold text-center mb-12 text-primary">Frequently Asked Questions</h2>
             <Accordion type="single" collapsible className="w-full max-w-2xl mx-auto">
               {[
                 { question: "How long does the review process take?", answer: "Our standard turnaround time is 48 hours. If you need it sooner, please contact us for rush options." },
@@ -232,8 +232,8 @@ export default function HomePage() {
                 { question: "How accurate is the AI detection?", answer: "Our AI detection system is highly accurate, but we also have human reviewers to ensure the best results." }
               ].map((faq, index) => (
                 <AccordionItem key={index} value={`item-${index}`}>
-                  <AccordionTrigger>{faq.question}</AccordionTrigger>
-                  <AccordionContent>{faq.answer.replace(/"/g, '&quot;')}</AccordionContent>
+                  <AccordionTrigger className="text-primary">{faq.question}</AccordionTrigger>
+                  <AccordionContent className="text-primary">{faq.answer.replace(/"/g, '&quot;')}</AccordionContent>
                 </AccordionItem>
               ))}
             </Accordion>
@@ -253,7 +253,7 @@ export default function HomePage() {
                 <ul className="space-y-2">
                   {["About", "Services", "Pricing", "Contact"].map((link, index) => (
                     <li key={index}>
-                      <Link href={`/${link.toLowerCase()}`} className="hover:underline">
+                      <Link href={`/${link.toLowerCase()}`} className="hover:underline text-white">
                         {link}
                       </Link>
                     </li>

@@ -1,10 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { cn } from "@/lib/utils"
-import { ModeToggle } from "@/components/ui/toggle-dm" // Import the ModeToggle component
-import { useTheme } from 'next-themes' // Import useTheme from next-themes
+import { ModeToggle } from "@/components/ui/toggle-dm"
+import { useTheme } from 'next-themes'
+import { usePathname } from 'next/navigation'
 
 const navItems = [
   { name: 'Home', href: '/' },
@@ -17,14 +18,22 @@ const navItems = [
 
 export function Navbar() {
   const [activeItem, setActiveItem] = useState('Home')
-  const { theme } = useTheme() // Get the current theme
+  const { theme } = useTheme()
+  const pathname = usePathname()
+  const [isDashboard, setIsDashboard] = useState(false)
+
+  useEffect(() => {
+    setIsDashboard(pathname === '/dashboard')
+  }, [pathname])
 
   return (
     <nav className={cn("shadow-sm", theme === 'dark' ? 'bg-gray-900' : 'bg-white')}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           <div className="flex-shrink-0 pl-4">
-            <span className={cn("text-2xl font-bold", theme === 'dark' ? 'text-white' : 'text-gray-900')}>PSReviewer</span>
+            {!isDashboard && (
+              <span className={cn("text-2xl font-bold", theme === 'dark' ? 'text-white' : 'text-gray-900')}>PSReviewer</span>
+            )}
           </div>
           <div className="flex-grow flex justify-center">
             <div className="hidden sm:flex sm:space-x-8">
