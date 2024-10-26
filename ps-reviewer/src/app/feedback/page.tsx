@@ -33,9 +33,18 @@ type AIDetectionResult = {
   }> | null
 }
 
+type PlagiarismResult = {
+  score: number;
+  sources: Array<{
+    url: string;
+    score: number;
+  }> | null;
+}
+
 type CombinedResponse = {
   feedback: FeedbackResponse
   ai_detection: AIDetectionResult
+  plagiarism_check: PlagiarismResult
 }
 
 export default function PersonalStatementFeedback() {
@@ -127,6 +136,12 @@ export default function PersonalStatementFeedback() {
     return 'text-red-500'
   }
 
+  const getPlagiarismColor = (score: number) => {
+    if (score < 20) return 'text-green-500';
+    if (score < 50) return 'text-yellow-500';
+    return 'text-red-500';
+  }
+
   const renderAIDetectionResult = () => {
     if (!combinedResponse) return null
     const { overall_ai_probability, flagged_sections } = combinedResponse.ai_detection
@@ -189,6 +204,74 @@ export default function PersonalStatementFeedback() {
                     <p className="font-medium">"{section.text}"</p>
                     <p className="text-gray-600">Reason: {section.reason}</p>
                     <p className="text-gray-600">Probability: {section.probability.toFixed(2)}%</p>
+                  </div>
+                ))}
+              </CollapsibleContent>
+            </Collapsible>
+          )}
+        </CardContent>
+      </Card>
+    )
+  }
+
+  const renderPlagiarismResult = () => {
+    if (!combinedResponse) return null
+    const { score, sources } = combinedResponse.plagiarism_check
+
+    return (
+      <Card className="mb-4">
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center justify-between">
+            Plagiarism Check
+            <div className={`relative w-20 h-20 ${getPlagiarismColor(score)}`}>
+              <svg className="w-full h-full" viewBox="0 0 36 36">
+                <path
+                  d="M18 2.0845
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                  fill="none"
+                  stroke="rgba(25, 25, 25, 0.2)"
+                  strokeWidth="2"
+                />
+                <path
+                  d="M18 2.0845
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeDasharray={`${score}, 100`}
+                />
+              </svg>
+              <span className="absolute inset-0 flex items-center justify-center text-lg font-bold">
+                {score.toFixed(0)}%
+              </span>
+            </div>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {score > 20 && (
+            <Alert variant="warning" className="mb-4">
+              <AlertTriangle className="h-4 w-4" />
+              <AlertTitle>Potential Plagiarism Detected</AlertTitle>
+              <AlertDescription>
+                Your personal statement may contain content similar to existing sources. Please review and ensure all content is original or properly cited.
+              </AlertDescription>
+            </Alert>
+          )}
+          {sources && sources.length > 0 && (
+            <Collapsible>
+              <CollapsibleTrigger className="flex items-center text-sm font-medium">
+                View Similar Sources
+                <ChevronDown className="h-4 w-4 ml-1" />
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                {sources.map((source, index) => (
+                  <div key={index} className="mb-2 p-2 bg-gray-100 rounded text-sm">
+                    <p className="font-medium">
+                      <a href={source.url} target="_blank" rel="noopener noreferrer">{source.url}</a>
+                    </p>
+                    <p className="text-gray-600">Similarity: {source.score.toFixed(2)}%</p>
                   </div>
                 ))}
               </CollapsibleContent>
@@ -275,6 +358,7 @@ export default function PersonalStatementFeedback() {
           <div>
             <h2 className="text-2xl font-semibold mb-4">Feedback Results</h2>
             {renderAIDetectionResult()}
+            {renderPlagiarismResult()}
             {renderFeedbackCategory('clarity', 'Clarity')}
             {renderFeedbackCategory('structure', 'Structure')}
             {renderFeedbackCategory('grammar_spelling', 'Grammar & Spelling')}
