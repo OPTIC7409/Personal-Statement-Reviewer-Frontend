@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google'
 import { Navbar } from '@/components/Navbar'
 import { SuperTokensProvider } from "./components/supertokensProvider"
 import { ThemeProvider } from "@/components/theme-provider"
+import { Toaster } from "@/components/ui/toaster"
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -30,6 +31,7 @@ export default function RootLayout({
             <Navbar />
             <main className="min-h-screen bg-background">
               {children}
+              <Toaster />
             </main>
           </ThemeProvider>
         </SuperTokensProvider>
