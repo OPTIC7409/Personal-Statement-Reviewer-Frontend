@@ -21,20 +21,18 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <SuperTokensProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <Navbar />
-            <main className="min-h-screen bg-background">
-              {children}
-              <Toaster />
-            </main>
-          </ThemeProvider>
-        </SuperTokensProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Navbar />
+          <main className="min-h-screen bg-background">
+            {children}
+            <Toaster />
+          </main>
+        </ThemeProvider>
       </body>
     </html>
   )
