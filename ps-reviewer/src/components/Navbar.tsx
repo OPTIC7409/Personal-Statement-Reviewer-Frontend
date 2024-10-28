@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { cn } from "@/lib/utils"
-import { ModeToggle } from "@/components/ui/toggle-dm"
 import { usePathname } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import * as React from "react"
@@ -28,11 +27,11 @@ const navItems = [
 
 export function Navbar() {
   const [activeItem, setActiveItem] = useState('Home')
-  const { theme } = useTheme()
   const pathname = usePathname()
   const [isDashboard, setIsDashboard] = useState(false)
   const [isHome, setIsHome] = useState(false)
   const { setTheme } = useTheme()
+
   useEffect(() => {
     setIsDashboard(pathname === '/dashboard')
     setIsHome(pathname === '/')
@@ -67,19 +66,17 @@ export function Navbar() {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-
       </nav>
     </div>
-
   );
 
   return (
-    <nav className={cn("shadow-sm", theme === 'dark' ? 'bg-gray-900' : 'bg-white')}>
+    <nav className="bg-white dark:bg-gray-900 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           <div className="flex-shrink-0 pl-4">
             {!isDashboard && (
-              <span className={cn("text-2xl font-bold", theme === 'dark' ? 'text-white' : 'text-gray-900')}>PSReviewer</span>
+              <span className="text-2xl font-bold text-gray-900 dark:text-white">PSReviewer</span>
             )}
           </div>
           <div className="flex-grow flex justify-center">
@@ -91,18 +88,37 @@ export function Navbar() {
                   className={cn(
                     "inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium",
                     activeItem === item.name
-                      ? "border-primary text-gray-900"
-                      : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                      ? "border-primary text-gray-900 dark:text-white"
+                      : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-300 dark:hover:text-white"
                   )}
                   onClick={() => setActiveItem(item.name)}
                 >
-                  <span className={cn(theme === 'dark' ? 'text-white' : 'text-gray-900')}>{item.name}</span>
+                  <span className="text-gray-900 dark:text-white">{item.name}</span>
                 </Link>
               ))}
             </div>
           </div>
           <div className="flex-shrink-0 w-48 flex justify-end pr-4">
-            <ModeToggle />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="icon">
+                  <SunIcon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                  <MoonIcon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                  <span className="sr-only">Toggle theme</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => setTheme("light")}>
+                  Light
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme("dark")}>
+                  Dark
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme("system")}>
+                  System
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </div>

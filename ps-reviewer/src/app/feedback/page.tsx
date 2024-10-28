@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -8,6 +8,8 @@ import { Progress } from "@/components/ui/progress"
 import { AlertCircle, AlertTriangle, ChevronDown, ChevronUp, ArrowLeft } from 'lucide-react'
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import Cookies from 'js-cookie'
 
 type FeedbackCategory = {
@@ -34,17 +36,17 @@ type AIDetectionResult = {
 }
 
 type PlagiarismResult = {
-  score: number;
-  sources: Array<{
-    url: string;
-    score: number;
-  }> | null;
+  PlagiarismPercentage: number
+  Sources: Array<{
+    URL: string
+    Percent: number
+  }>
 }
 
 type CombinedResponse = {
   feedback: FeedbackResponse
   ai_detection: AIDetectionResult
-  plagiarism_check: PlagiarismResult
+  plagiarism: PlagiarismResult
 }
 
 export default function PersonalStatementFeedback() {
@@ -58,7 +60,6 @@ export default function PersonalStatementFeedback() {
   const [charCountNoSpaces, setCharCountNoSpaces] = useState(0)
   const [wordCount, setWordCount] = useState(0)
   const [highlightedSection, setHighlightedSection] = useState<string | null>(null)
-  const textRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const sessionToken = Cookies.get('session_token')
@@ -137,9 +138,9 @@ export default function PersonalStatementFeedback() {
   }
 
   const getPlagiarismColor = (score: number) => {
-    if (score < 20) return 'text-green-500';
-    if (score < 50) return 'text-yellow-500';
-    return 'text-red-500';
+    if (score < 20) return 'text-green-500'
+    if (score < 50) return 'text-yellow-500'
+    return 'text-red-500'
   }
 
   const renderAIDetectionResult = () => {
@@ -197,13 +198,13 @@ export default function PersonalStatementFeedback() {
                 {flagged_sections.map((section, index) => (
                   <div
                     key={index}
-                    className="mb-2 p-2 bg-gray-100 rounded text-sm"
+                    className="mb-2 p-2 bg-muted rounded text-sm"
                     onMouseEnter={() => setHighlightedSection(section.text)}
                     onMouseLeave={() => setHighlightedSection(null)}
                   >
                     <p className="font-medium">"{section.text}"</p>
-                    <p className="text-gray-600">Reason: {section.reason}</p>
-                    <p className="text-gray-600">Probability: {section.probability.toFixed(2)}%</p>
+                    <p className="text-muted-foreground">Reason: {section.reason}</p>
+                    <p className="text-muted-foreground">Probability: {section.probability.toFixed(2)}%</p>
                   </div>
                 ))}
               </CollapsibleContent>
@@ -216,14 +217,14 @@ export default function PersonalStatementFeedback() {
 
   const renderPlagiarismResult = () => {
     if (!combinedResponse) return null
-    const { score, sources } = combinedResponse.plagiarism_check
+    const { PlagiarismPercentage, Sources } = combinedResponse.plagiarism
 
     return (
       <Card className="mb-4">
         <CardHeader>
           <CardTitle className="text-lg flex items-center justify-between">
             Plagiarism Check
-            <div className={`relative w-20 h-20 ${getPlagiarismColor(score)}`}>
+            <div className={`relative w-20 h-20 ${getPlagiarismColor(PlagiarismPercentage)}`}>
               <svg className="w-full h-full" viewBox="0 0 36 36">
                 <path
                   d="M18 2.0845
@@ -240,17 +241,17 @@ export default function PersonalStatementFeedback() {
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
-                  strokeDasharray={`${score}, 100`}
+                  strokeDasharray={`${PlagiarismPercentage}, 100`}
                 />
               </svg>
               <span className="absolute inset-0 flex items-center justify-center text-lg font-bold">
-                {score.toFixed(0)}%
+                {PlagiarismPercentage.toFixed(1)}%
               </span>
             </div>
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {score > 20 && (
+          {PlagiarismPercentage > 20 && (
             <Alert variant="default" className="mb-4">
               <AlertTriangle className="h-4 w-4" />
               <AlertTitle>Potential Plagiarism Detected</AlertTitle>
@@ -259,19 +260,19 @@ export default function PersonalStatementFeedback() {
               </AlertDescription>
             </Alert>
           )}
-          {sources && sources.length > 0 && (
+          {Sources && Sources.length > 0 && (
             <Collapsible>
               <CollapsibleTrigger className="flex items-center text-sm font-medium">
                 View Similar Sources
                 <ChevronDown className="h-4 w-4 ml-1" />
               </CollapsibleTrigger>
               <CollapsibleContent>
-                {sources.map((source, index) => (
-                  <div key={index} className="mb-2 p-2 bg-gray-100 rounded text-sm">
+                {Sources.map((source, index) => (
+                  <div key={index} className="mb-2 p-2 bg-muted rounded text-sm">
                     <p className="font-medium">
-                      <a href={source.url} target="_blank" rel="noopener noreferrer">{source.url}</a>
+                      <a href={source.URL} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">{source.URL}</a>
                     </p>
-                    <p className="text-gray-600">Similarity: {source.score.toFixed(2)}%</p>
+                    <p className="text-muted-foreground">Similarity: {source.Percent.toFixed(1)}%</p>
                   </div>
                 ))}
               </CollapsibleContent>
@@ -282,18 +283,8 @@ export default function PersonalStatementFeedback() {
     )
   }
 
-  const highlightText = (text: string, highlightedSection: string | null) => {
-    if (!highlightedSection) return text
-
-    const parts = text.split(new RegExp(`(${highlightedSection})`, 'gi'))
-    return parts.map((part, i) =>
-      part.toLowerCase() === highlightedSection?.toLowerCase() ?
-        <span key={i} className="bg-yellow-200">{part}</span> : part
-    )
-  }
-
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 bg-background text-foreground">
       <Button
         variant="ghost"
         onClick={() => router.push('/dashboard')}
@@ -313,28 +304,30 @@ export default function PersonalStatementFeedback() {
           </CardHeader>
           <CardContent>
             <div className="mb-4">
-              <label htmlFor="statementPurpose" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="statementPurpose" className="block text-sm font-medium mb-1">
                 University Course / Statement Purpose
               </label>
-              <input
+              <Input
                 type="text"
                 id="statementPurpose"
-                className="w-full p-2 border rounded-md"
                 value={statementPurpose}
                 onChange={(e) => setStatementPurpose(e.target.value)}
                 placeholder="e.g., Computer Science at MIT, Medical School Application"
               />
             </div>
-            <div
-              ref={textRef}
-              className="min-h-[300px] p-4 border rounded-md mb-4 whitespace-pre-wrap"
-              contentEditable
-              onInput={(e) => setPersonalStatement(e.currentTarget.textContent || '')}
-              dangerouslySetInnerHTML={{
-                __html: highlightText(personalStatement, highlightedSection) as string
-              }}
-            />
-            <div className="flex justify-between text-sm text-gray-500 mb-4">
+            <div className="mb-4">
+              <label htmlFor="personalStatement" className="block text-sm font-medium mb-1">
+                Personal Statement
+              </label>
+              <Textarea
+                id="personalStatement"
+                value={personalStatement}
+                onChange={(e) => setPersonalStatement(e.target.value)}
+                placeholder="Enter your personal statement here..."
+                className="min-h-[300px]"
+              />
+            </div>
+            <div className="flex justify-between text-sm text-muted-foreground mb-4">
               <span>Characters: {charCount} (without spaces: {charCountNoSpaces})</span>
               <span>Words: {wordCount}</span>
             </div>
@@ -364,6 +357,7 @@ export default function PersonalStatementFeedback() {
             {renderFeedbackCategory('grammar_spelling', 'Grammar & Spelling')}
             {renderFeedbackCategory('relevance', 'Relevance')}
             {renderFeedbackCategory('engagement', 'Engagement')}
+            
             {renderFeedbackCategory('overall_impression', 'Overall Impression')}
           </div>
         )}

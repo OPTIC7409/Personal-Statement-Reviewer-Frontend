@@ -131,12 +131,17 @@ export default function Dashboard() {
   }
 
   const fetchUserName = () => {
-    if (typeof window !== 'undefined') {
-      const accountData = localStorage.getItem('accountData')
-      if (accountData) {
+    const accountData = localStorage.getItem('accountData')
+    if (accountData) {
+      try {
         const { name } = JSON.parse(accountData)
         setUserName(name || 'User')
+      } catch (error) {
+        console.error('Error parsing accountData:', error)
+        setUserName('User')
       }
+    } else {
+      setUserName('User')
     }
   }
 

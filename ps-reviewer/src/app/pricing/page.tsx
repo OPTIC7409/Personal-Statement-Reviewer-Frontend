@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { CheckCircle2, Zap, Clock, Rocket, X } from 'lucide-react'
 
@@ -99,7 +99,7 @@ export default function PricingPage() {
     return (
         <div className="container mx-auto px-4 py-16">
             <h1 className="text-4xl font-bold text-center mb-4">Choose Your Plan</h1>
-            <p className="text-center text-gray-600 mb-12">Refine your personal statement with AI-powered feedback in seconds</p>
+            <p className="text-center text-muted-foreground mb-12">Refine your personal statement with AI-powered feedback in seconds</p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
                 {pricingPlans.map((plan) => (
                     <Card key={plan.name} className="flex flex-col relative">
@@ -130,18 +130,18 @@ export default function PricingPage() {
                             >
                                 {isLoading === plan.stripePriceId ? 'Processing...' : `Start Refining with ${plan.name}`}
                             </Button>
-                            <p className="text-sm text-center text-gray-500">Instant feedback, multiple revisions</p>
+                            <p className="text-sm text-center text-muted-foreground">Instant feedback, multiple revisions</p>
                         </CardFooter>
                     </Card>
                 ))}
             </div>
 
-            <div className="mb-16">
-                <h2 className="text-3xl font-bold text-center mb-8">Plan Comparison</h2>
+            <div className="mb-32">
+                <h2 className="text-3xl font-bold text-center mb-12">Plan Comparison</h2>
                 <div className="overflow-x-auto">
                     <table className="w-full">
                         <thead>
-                            <tr className="bg-gray-100">
+                            <tr className="bg-muted">
                                 <th className="px-4 py-2 text-left">Feature</th>
                                 <th className="px-4 py-2 text-center">Basic ($9.99)</th>
                                 <th className="px-4 py-2 text-center">Pro ($19.99)</th>
@@ -150,15 +150,15 @@ export default function PricingPage() {
                         </thead>
                         <tbody>
                             {feedbackComparison.map((item, index) => (
-                                <tr key={index} className={index % 2 === 0 ? 'bg-gray-50' : ''}>
-                                    <td className="px-4 py-2">{item.feature}</td>
-                                    <td className="px-4 py-2 text-center">
+                                <tr key={index} className={index % 2 === 0 ? 'bg-muted/50' : ''}>
+                                    <td className="px-4 py-4">{item.feature}</td>
+                                    <td className="px-4 py-4 text-center">
                                         {item.basic ? <CheckCircle2 className="h-5 w-5 text-green-500 inline" /> : <X className="h-5 w-5 text-red-500 inline" />}
                                     </td>
-                                    <td className="px-4 py-2 text-center">
+                                    <td className="px-4 py-4 text-center">
                                         {item.advanced ? <CheckCircle2 className="h-5 w-5 text-green-500 inline" /> : <X className="h-5 w-5 text-red-500 inline" />}
                                     </td>
-                                    <td className="px-4 py-2 text-center">
+                                    <td className="px-4 py-4 text-center">
                                         {item.premium ? <CheckCircle2 className="h-5 w-5 text-green-500 inline" /> : <X className="h-5 w-5 text-red-500 inline" />}
                                     </td>
                                 </tr>
@@ -166,7 +166,7 @@ export default function PricingPage() {
                         </tbody>
                     </table>
                 </div>
-                <div className="text-center mt-8 space-x-4">
+                <div className="text-center mt-12 space-x-4">
                     <Button size="lg" onClick={() => handleSubscription(pricingPlans[1].stripePriceId)}>
                         Upgrade to Pro
                     </Button>
@@ -176,29 +176,29 @@ export default function PricingPage() {
                 </div>
             </div>
 
-            <div className="text-center mb-16">
-                <h2 className="text-3xl font-bold mb-4">Why Our AI-Powered Review Process Works</h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
+            <div className="text-center mb-32">
+                <h2 className="text-3xl font-bold mb-12">Why Our AI-Powered Review Process Works</h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-16 mt-16">
                     <div className="flex flex-col items-center">
                         <Zap className="h-12 w-12 text-yellow-400 mb-4" />
                         <h3 className="text-xl font-semibold mb-2">Instant Feedback</h3>
-                        <p className="text-gray-600">Get comprehensive analysis in seconds for each draft</p>
+                        <p className="text-muted-foreground">Get comprehensive analysis in seconds for each draft</p>
                     </div>
                     <div className="flex flex-col items-center">
                         <Clock className="h-12 w-12 text-blue-500 mb-4" />
                         <h3 className="text-xl font-semibold mb-2">Iterative Improvement</h3>
-                        <p className="text-gray-600">Refine your statement with multiple drafts and quick revisions</p>
+                        <p className="text-muted-foreground">Refine your statement with multiple drafts and quick revisions</p>
                     </div>
                     <div className="flex flex-col items-center">
                         <Rocket className="h-12 w-12 text-green-500 mb-4" />
                         <h3 className="text-xl font-semibold mb-2">Continuous Learning</h3>
-                        <p className="text-gray-600">Our AI adapts to your writing style for personalized advice</p>
+                        <p className="text-muted-foreground">Our AI adapts to your writing style for personalized advice</p>
                     </div>
                 </div>
             </div>
-            <div className="text-center">
-                <h2 className="text-2xl font-bold mb-4">Ready to Perfect Your Personal Statement?</h2>
-                <p className="text-gray-600 mb-6">Join thousands of applicants who've improved their chances with our AI-powered revision process</p>
+            <div className="text-center mt-16 mb-16">
+                <h2 className="text-2xl font-bold mb-8">Ready to Perfect Your Personal Statement?</h2>
+                <p className="text-muted-foreground mb-12">Join thousands of applicants who've improved their chances with our AI-powered revision process</p>
                 <Button size="lg" onClick={() => handleSubscription(pricingPlans[2].stripePriceId)}>
                     Start Your Journey to the Perfect Statement
                 </Button>

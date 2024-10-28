@@ -53,7 +53,7 @@ export default function LoginPage() {
     }
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <div className="flex items-center justify-center min-h-screen bg-background">
             <Card className="w-full max-w-md">
                 <CardHeader>
                     <CardTitle>Log In</CardTitle>
@@ -95,9 +95,9 @@ export default function LoginPage() {
                     </form>
                 </CardContent>
                 <CardFooter>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-muted-foreground">
                         Don't have an account?{' '}
-                        <a href="/signup" className="text-blue-600 hover:underline">
+                        <a href="/signup" className="text-primary hover:underline">
                             Sign up
                         </a>
                     </p>
