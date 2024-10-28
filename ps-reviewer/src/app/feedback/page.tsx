@@ -44,7 +44,7 @@ type PlagiarismResult = {
 type CombinedResponse = {
   feedback: FeedbackResponse
   ai_detection: AIDetectionResult
-  plagiarism_check: PlagiarismResult
+  plagiarism_check: PlagiarismResult | null // Allow plagiarism_check to be null
 }
 
 export default function PersonalStatementFeedback() {
@@ -215,7 +215,8 @@ export default function PersonalStatementFeedback() {
   }
 
   const renderPlagiarismResult = () => {
-    if (!combinedResponse) return null
+    if (!combinedResponse || !combinedResponse.plagiarism_check) return null // Check for null
+
     const { score, sources } = combinedResponse.plagiarism_check
 
     return (
@@ -251,7 +252,7 @@ export default function PersonalStatementFeedback() {
         </CardHeader>
         <CardContent>
           {score > 20 && (
-            <Alert variant="warning" className="mb-4">
+            <Alert variant="default" className="mb-4">
               <AlertTriangle className="h-4 w-4" />
               <AlertTitle>Potential Plagiarism Detected</AlertTitle>
               <AlertDescription>
